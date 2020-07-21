@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Culture_OneTrack" Class="CultureDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.;Initial Catalog=Culture_OneTrack;User ID=test" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="Culture_OneTrackConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Attendance" Member="Attendances">
+    <Type Name="Attendance">
+      <Column Name="Attendance_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Attendance_MeetingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Attendance_MemberID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Meeting_Attendance" Member="Meeting" ThisKey="Attendance_MeetingID" OtherKey="Meeting_ID" Type="Meeting" IsForeignKey="true" />
+      <Association Name="Member_Attendance" Member="Member" ThisKey="Attendance_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DiscussionPriorities" Member="DiscussionPriorities">
+    <Type Name="DiscussionPriority">
+      <Column Name="DiscussionPriority_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DiscussionPriority_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="DiscussionPriority_MeetingAgenda" Member="MeetingAgendas" ThisKey="DiscussionPriority_ID" OtherKey="Agenda_DiscussionPriorityID" Type="MeetingAgenda" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GroupPrivileges" Member="GroupPrivileges">
+    <Type Name="GroupPrivilege">
+      <Column Name="GroupPrivilege_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="GroupPrivilege_GroupID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GroupPrivilege_PageFunctionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Group_GroupPrivilege" Member="Group" ThisKey="GroupPrivilege_GroupID" OtherKey="Group_ID" Type="Group" IsForeignKey="true" />
+      <Association Name="SystemPageFunction_GroupPrivilege" Member="SystemPageFunction" ThisKey="GroupPrivilege_PageFunctionID" OtherKey="SystemPageFunction_ID" Type="SystemPageFunction" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Groups" Member="Groups">
+    <Type Name="Group">
+      <Column Name="Group_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Group_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="Group_GroupPrivilege" Member="GroupPrivileges" ThisKey="Group_ID" OtherKey="GroupPrivilege_GroupID" Type="GroupPrivilege" />
+      <Association Name="Group_GroupUser" Member="GroupUsers" ThisKey="Group_ID" OtherKey="GroupUser_GroupID" Type="GroupUser" />
+    </Type>
+  </Table>
+  <Table Name="dbo.GroupUsers" Member="GroupUsers">
+    <Type Name="GroupUser">
+      <Column Name="GroupUser_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="GroupUser_GroupID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GroupUser_UserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Group_GroupUser" Member="Group" ThisKey="GroupUser_GroupID" OtherKey="Group_ID" Type="Group" IsForeignKey="true" />
+      <Association Name="User_GroupUser" Member="User" ThisKey="GroupUser_UserID" OtherKey="User_ID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MeetingDiscussions" Member="MeetingDiscussions">
+    <Type Name="MeetingDiscussion">
+      <Column Name="Discussion_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Discussion_MeetingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discussion_Text" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="MeetingDiscussion_DiscussionRecommendation" Member="DiscussionRecommendations" ThisKey="Discussion_ID" OtherKey="Recommendation_DiscussionID" Type="DiscussionRecommendation" />
+      <Association Name="Meeting_MeetingDiscussion" Member="Meeting" ThisKey="Discussion_MeetingID" OtherKey="Meeting_ID" Type="Meeting" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MeetingStatus" Member="MeetingStatus">
+    <Type Name="MeetingStatus">
+      <Column Name="Status_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Status_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="MeetingStatus_Meeting" Member="Meetings" ThisKey="Status_ID" OtherKey="Meeting_StatusID" Type="Meeting" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MeetingTypes" Member="MeetingTypes">
+    <Type Name="MeetingType">
+      <Column Name="Type_ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Type_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="MeetingType_Meeting" Member="Meetings" ThisKey="Type_ID" OtherKey="Meeting_TypeID" Type="Meeting" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MembershipStatus" Member="MembershipStatus">
+    <Type Name="MembershipStatus">
+      <Column Name="MembershipStatus_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MembershipStatus_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="MembershipStatus_Member" Member="Members" ThisKey="MembershipStatus_ID" OtherKey="Member_MembershipStatusID" Type="Member" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PaymentStatus" Member="PaymentStatus">
+    <Type Name="PaymentStatus">
+      <Column Name="PaymentStatus_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PaymentStatus_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="PaymentStatus_Reward" Member="Rewards" ThisKey="PaymentStatus_ID" OtherKey="Reward_PaymentStatusID" Type="Reward" />
+    </Type>
+  </Table>
+  <Table Name="dbo.RecommendationDiscussions" Member="RecommendationDiscussions">
+    <Type Name="RecommendationDiscussion">
+      <Column Name="RecommendationDiscussion_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RecommendationDiscussion_RecommendationID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RecommendationDiscussion_Text" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="MeetingRecommendation_RecommendationDiscussion" Member="MeetingRecommendation" ThisKey="RecommendationDiscussion_RecommendationID" OtherKey="Recommendation_ID" Type="MeetingRecommendation" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Roles" Member="Roles">
+    <Type Name="Role">
+      <Column Name="Role_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Role_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="Role_Member" Member="Members" ThisKey="Role_ID" OtherKey="Member_RoleID" Type="Member" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Status" Member="Status">
+    <Type Name="Status">
+      <Column Name="Status_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Status_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="Status_Committee" Member="Committees" ThisKey="Status_ID" OtherKey="Committee_StatusID" Type="Committee" />
+      <Association Name="Status_MeetingAgenda" Member="MeetingAgendas" ThisKey="Status_ID" OtherKey="Agenda_StatusID" Type="MeetingAgenda" />
+      <Association Name="Status_MeetingRecommendation" Member="MeetingRecommendations" ThisKey="Status_ID" OtherKey="Recommendation_StatusID" Type="MeetingRecommendation" />
+      <Association Name="Status_DiscussionRecommendation" Member="DiscussionRecommendations" ThisKey="Status_ID" OtherKey="Recommendation_StatusID" Type="DiscussionRecommendation" />
+      <Association Name="Status_Member" Member="Members" ThisKey="Status_ID" OtherKey="Member_StatusID" Type="Member" />
+      <Association Name="Status_User" Member="Users" ThisKey="Status_ID" OtherKey="User_StatusID" Type="User" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemFunctions" Member="SystemFunctions">
+    <Type Name="SystemFunction">
+      <Column Name="SystemFunction_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SystemFunction_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="SystemFunction_SystemPageFunction" Member="SystemPageFunctions" ThisKey="SystemFunction_ID" OtherKey="SystemPageFunction_FunctionID" Type="SystemPageFunction" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemModulePages" Member="SystemModulePages">
+    <Type Name="SystemModulePage">
+      <Column Name="SystemModulePage_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SystemModulePage_ModuleID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SystemModulePage_PageName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="SystemModulePage_Route" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="SystemModulePage_SystemPageFunction" Member="SystemPageFunctions" ThisKey="SystemModulePage_ID" OtherKey="SystemPageFunction_PageID" Type="SystemPageFunction" />
+      <Association Name="SystemModule_SystemModulePage" Member="SystemModule" ThisKey="SystemModulePage_ModuleID" OtherKey="SystemModule_ID" Type="SystemModule" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemModules" Member="SystemModules">
+    <Type Name="SystemModule">
+      <Column Name="SystemModule_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SystemModule_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="SystemModule_SystemModulePage" Member="SystemModulePages" ThisKey="SystemModule_ID" OtherKey="SystemModulePage_ModuleID" Type="SystemModulePage" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SystemPageFunctions" Member="SystemPageFunctions">
+    <Type Name="SystemPageFunction">
+      <Column Name="SystemPageFunction_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SystemPageFunction_FunctionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SystemPageFunction_PageID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="SystemPageFunction_GroupPrivilege" Member="GroupPrivileges" ThisKey="SystemPageFunction_ID" OtherKey="GroupPrivilege_PageFunctionID" Type="GroupPrivilege" />
+      <Association Name="SystemFunction_SystemPageFunction" Member="SystemFunction" ThisKey="SystemPageFunction_FunctionID" OtherKey="SystemFunction_ID" Type="SystemFunction" IsForeignKey="true" />
+      <Association Name="SystemModulePage_SystemPageFunction" Member="SystemModulePage" ThisKey="SystemPageFunction_PageID" OtherKey="SystemModulePage_ID" Type="SystemModulePage" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CommitteeGoals" Member="CommitteeGoals">
+    <Type Name="CommitteeGoal">
+      <Column Name="Goal_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Goal_CommitteeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Goal_Text" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Committee_CommitteeGoal" Member="Committee" ThisKey="Goal_CommitteeID" OtherKey="Committee_ID" Type="Committee" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LogException" Member="LogExceptions">
+    <Type Name="LogException">
+      <Column Name="Excep_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Excep_Date" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="Excep_Message" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="Excep_Page_Name" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="Excep_Fun_Name" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="Excep_Line_Number" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CommitteeAttachments" Member="CommitteeAttachments">
+    <Type Name="CommitteeAttachment">
+      <Column Name="Attachment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Attachment_CommitteeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Attachment_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Attachment_File" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Committee_CommitteeAttachment" Member="Committee" ThisKey="Attachment_CommitteeID" OtherKey="Committee_ID" Type="Committee" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MeetingAttachments" Member="MeetingAttachments">
+    <Type Name="MeetingAttachment">
+      <Column Name="Attachment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Attachment_MeetingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Attachment_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Attachment_File" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Meeting_MeetingAttachment" Member="Meeting" ThisKey="Attachment_MeetingID" OtherKey="Meeting_ID" Type="Meeting" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.RewardAttachments" Member="RewardAttachments">
+    <Type Name="RewardAttachment">
+      <Column Name="Attachment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Attachment_RewardID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Attachment_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Attachment_File" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Reward_RewardAttachment" Member="Reward" ThisKey="Attachment_RewardID" OtherKey="Reward_ID" Type="Reward" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MemberAttachments" Member="MemberAttachments">
+    <Type Name="MemberAttachment">
+      <Column Name="Attachment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Attachment_MemberID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Attachment_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Attachment_File" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Member_MemberAttachment" Member="Member" ThisKey="Attachment_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Meetings" Member="Meetings">
+    <Type Name="Meeting">
+      <Column Name="Meeting_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Meeting_CommitteeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Meeting_Code" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Meeting_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Meeting_TimeFrom" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Meeting_TimeTo" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Meeting_Place" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Meeting_TypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Meeting_RewardMember" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Meeting_RewardNotMember" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Meeting_Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Meeting_StatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Meeting_PostponedUntil" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Meeting_Attendance" Member="Attendances" ThisKey="Meeting_ID" OtherKey="Attendance_MeetingID" Type="Attendance" />
+      <Association Name="Meeting_MeetingDiscussion" Member="MeetingDiscussions" ThisKey="Meeting_ID" OtherKey="Discussion_MeetingID" Type="MeetingDiscussion" />
+      <Association Name="Meeting_MeetingAttachment" Member="MeetingAttachments" ThisKey="Meeting_ID" OtherKey="Attachment_MeetingID" Type="MeetingAttachment" />
+      <Association Name="Meeting_Reward" Member="Rewards" ThisKey="Meeting_ID" OtherKey="Reward_MeetingID" Type="Reward" />
+      <Association Name="Meeting_MeetingAgenda" Member="MeetingAgendas" ThisKey="Meeting_ID" OtherKey="Agenda_MeetingID" Type="MeetingAgenda" />
+      <Association Name="Meeting_MeetingAgendaAttachment" Member="MeetingAgendaAttachments" ThisKey="Meeting_ID" OtherKey="Attachment_MeetingID" Type="MeetingAgendaAttachment" />
+      <Association Name="Meeting_MeetingRecommendation" Member="MeetingRecommendations" ThisKey="Meeting_ID" OtherKey="Recommendation_MeetingID" Type="MeetingRecommendation" />
+      <Association Name="MeetingStatus_Meeting" Member="MeetingStatus" ThisKey="Meeting_StatusID" OtherKey="Status_ID" Type="MeetingStatus" IsForeignKey="true" />
+      <Association Name="MeetingType_Meeting" Member="MeetingType" ThisKey="Meeting_TypeID" OtherKey="Type_ID" Type="MeetingType" IsForeignKey="true" />
+      <Association Name="Committee_Meeting" Member="Committee" ThisKey="Meeting_CommitteeID" OtherKey="Committee_ID" Type="Committee" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Rewards" Member="Rewards">
+    <Type Name="Reward">
+      <Column Name="Reward_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Reward_MeetingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Reward_MemberID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Reward_Value" Type="System.Decimal" DbType="Decimal(18,4)" CanBeNull="true" />
+      <Column Name="Reward_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Reward_PaymentStatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Reward_PaymentDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Reward_IsException" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="Reward_RewardAttachment" Member="RewardAttachments" ThisKey="Reward_ID" OtherKey="Attachment_RewardID" Type="RewardAttachment" />
+      <Association Name="Meeting_Reward" Member="Meeting" ThisKey="Reward_MeetingID" OtherKey="Meeting_ID" Type="Meeting" IsForeignKey="true" />
+      <Association Name="PaymentStatus_Reward" Member="PaymentStatus" ThisKey="Reward_PaymentStatusID" OtherKey="PaymentStatus_ID" Type="PaymentStatus" IsForeignKey="true" />
+      <Association Name="Member_Reward" Member="Member" ThisKey="Reward_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Committees" Member="Committees">
+    <Type Name="Committee">
+      <Column Name="Committee_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Committee_Name" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Committee_Code" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Committee_About" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Committee_Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Committee_StatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Committee_CommitteeGoal" Member="CommitteeGoals" ThisKey="Committee_ID" OtherKey="Goal_CommitteeID" Type="CommitteeGoal" />
+      <Association Name="Committee_CommitteeAttachment" Member="CommitteeAttachments" ThisKey="Committee_ID" OtherKey="Attachment_CommitteeID" Type="CommitteeAttachment" />
+      <Association Name="Committee_Meeting" Member="Meetings" ThisKey="Committee_ID" OtherKey="Meeting_CommitteeID" Type="Meeting" />
+      <Association Name="Committee_Member" Member="Members" ThisKey="Committee_ID" OtherKey="Member_CommitteeID" Type="Member" />
+      <Association Name="Committee_User" Member="Users" ThisKey="Committee_ID" OtherKey="User_CommitteeID" Type="User" />
+      <Association Name="Status_Committee" Member="Status" ThisKey="Committee_StatusID" OtherKey="Status_ID" Type="Status" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MeetingAgenda" Member="MeetingAgendas">
+    <Type Name="MeetingAgenda">
+      <Column Name="Agenda_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Agenda_MeetingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Agenda_Item" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Agenda_DiscussionPriorityID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Agenda_StatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Agenda_Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="MeetingAgenda_AgendaAttachment" Member="AgendaAttachments" ThisKey="Agenda_ID" OtherKey="Attachment_AgendaID" Type="AgendaAttachment" />
+      <Association Name="MeetingAgenda_AgendaDiscussion" Member="AgendaDiscussions" ThisKey="Agenda_ID" OtherKey="Discussion_AgendaID" Type="AgendaDiscussion" />
+      <Association Name="DiscussionPriority_MeetingAgenda" Member="DiscussionPriority" ThisKey="Agenda_DiscussionPriorityID" OtherKey="DiscussionPriority_ID" Type="DiscussionPriority" IsForeignKey="true" />
+      <Association Name="Meeting_MeetingAgenda" Member="Meeting" ThisKey="Agenda_MeetingID" OtherKey="Meeting_ID" Type="Meeting" IsForeignKey="true" />
+      <Association Name="Status_MeetingAgenda" Member="Status" ThisKey="Agenda_StatusID" OtherKey="Status_ID" Type="Status" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AgendaAttachments" Member="AgendaAttachments">
+    <Type Name="AgendaAttachment">
+      <Column Name="Attachment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Attachment_AgendaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Attachment_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Attachment_File" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="MeetingAgenda_AgendaAttachment" Member="MeetingAgenda" ThisKey="Attachment_AgendaID" OtherKey="Agenda_ID" Type="MeetingAgenda" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MeetingAgendaAttachments" Member="MeetingAgendaAttachments">
+    <Type Name="MeetingAgendaAttachment">
+      <Column Name="Attachment_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Attachment_MeetingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Attachment_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Attachment_File" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Meeting_MeetingAgendaAttachment" Member="Meeting" ThisKey="Attachment_MeetingID" OtherKey="Meeting_ID" Type="Meeting" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MemberNotifications" Member="MemberNotifications">
+    <Type Name="MemberNotification">
+      <Column Name="MemberNotification_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MemberNotification_MemberID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MemberNotification_NotificationTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="NotificationType_MemberNotification" Member="NotificationType" ThisKey="MemberNotification_NotificationTypeID" OtherKey="Notification_ID" Type="NotificationType" IsForeignKey="true" />
+      <Association Name="Member_MemberNotification" Member="Member" ThisKey="MemberNotification_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.NotificationTypes" Member="NotificationTypes">
+    <Type Name="NotificationType">
+      <Column Name="Notification_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Notification_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="NotificationType_MemberNotification" Member="MemberNotifications" ThisKey="Notification_ID" OtherKey="MemberNotification_NotificationTypeID" Type="MemberNotification" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MemberTypes" Member="MemberTypes">
+    <Type Name="MemberType">
+      <Column Name="MemberType_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MemberType_Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="MemberType_Member" Member="Members" ThisKey="MemberType_ID" OtherKey="Member_TypeID" Type="Member" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MeetingRecommendations" Member="MeetingRecommendations">
+    <Type Name="MeetingRecommendation">
+      <Column Name="Recommendation_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Recommendation_MeetingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Recommendation_Code" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Recommendation_Text" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Recommendation_Progress" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Recommendation_StatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="MeetingRecommendation_RecommendationDiscussion" Member="RecommendationDiscussions" ThisKey="Recommendation_ID" OtherKey="RecommendationDiscussion_RecommendationID" Type="RecommendationDiscussion" />
+      <Association Name="MeetingRecommendation_ResponsibleForImplementation" Member="ResponsibleForImplementations" ThisKey="Recommendation_ID" OtherKey="ResponsibleForImplementation_RecommendationID" Type="ResponsibleForImplementation" />
+      <Association Name="Meeting_MeetingRecommendation" Member="Meeting" ThisKey="Recommendation_MeetingID" OtherKey="Meeting_ID" Type="Meeting" IsForeignKey="true" />
+      <Association Name="Status_MeetingRecommendation" Member="Status" ThisKey="Recommendation_StatusID" OtherKey="Status_ID" Type="Status" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ResponsibleForImplementation" Member="ResponsibleForImplementations">
+    <Type Name="ResponsibleForImplementation">
+      <Column Name="ResponsibleForImplementation_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ResponsibleForImplementation_MemberID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ResponsibleForImplementation_RecommendationID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="MeetingRecommendation_ResponsibleForImplementation" Member="MeetingRecommendation" ThisKey="ResponsibleForImplementation_RecommendationID" OtherKey="Recommendation_ID" Type="MeetingRecommendation" IsForeignKey="true" />
+      <Association Name="Member_ResponsibleForImplementation" Member="Member" ThisKey="ResponsibleForImplementation_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DiscussionRecommendations" Member="DiscussionRecommendations">
+    <Type Name="DiscussionRecommendation">
+      <Column Name="Recommendation_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Recommendation_DiscussionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Recommendation_Code" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Recommendation_Text" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Recommendation_Progress" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Recommendation_StatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="DiscussionRecommendation_RespForImpDiscussionRecommendation" Member="RespForImpDiscussionRecommendations" ThisKey="Recommendation_ID" OtherKey="ResponsibleForImplementation_DiscussionRecommendationID" Type="RespForImpDiscussionRecommendation" />
+      <Association Name="MeetingDiscussion_DiscussionRecommendation" Member="MeetingDiscussion" ThisKey="Recommendation_DiscussionID" OtherKey="Discussion_ID" Type="MeetingDiscussion" IsForeignKey="true" />
+      <Association Name="Status_DiscussionRecommendation" Member="Status" ThisKey="Recommendation_StatusID" OtherKey="Status_ID" Type="Status" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.RespForImpDiscussionRecommendation" Member="RespForImpDiscussionRecommendations">
+    <Type Name="RespForImpDiscussionRecommendation">
+      <Column Name="ResponsibleForImplementation_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ResponsibleForImplementation_MemberID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ResponsibleForImplementation_DiscussionRecommendationID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="DiscussionRecommendation_RespForImpDiscussionRecommendation" Member="DiscussionRecommendation" ThisKey="ResponsibleForImplementation_DiscussionRecommendationID" OtherKey="Recommendation_ID" Type="DiscussionRecommendation" IsForeignKey="true" />
+      <Association Name="Member_RespForImpDiscussionRecommendation" Member="Member" ThisKey="ResponsibleForImplementation_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Members" Member="Members">
+    <Type Name="Member">
+      <Column Name="Member_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Member_CommitteeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Member_Name" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Member_Code" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Member_TypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Member_RoleID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Member_MembershipStatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Member_As" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Member_NationalID" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Member_Email" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Member_Address" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Member_Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Member_StatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Member_Avatar" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Member_Attendance" Member="Attendances" ThisKey="Member_ID" OtherKey="Attendance_MemberID" Type="Attendance" />
+      <Association Name="Member_MemberAttachment" Member="MemberAttachments" ThisKey="Member_ID" OtherKey="Attachment_MemberID" Type="MemberAttachment" />
+      <Association Name="Member_Reward" Member="Rewards" ThisKey="Member_ID" OtherKey="Reward_MemberID" Type="Reward" />
+      <Association Name="Member_MemberNotification" Member="MemberNotifications" ThisKey="Member_ID" OtherKey="MemberNotification_MemberID" Type="MemberNotification" />
+      <Association Name="Member_ResponsibleForImplementation" Member="ResponsibleForImplementations" ThisKey="Member_ID" OtherKey="ResponsibleForImplementation_MemberID" Type="ResponsibleForImplementation" />
+      <Association Name="Member_RespForImpDiscussionRecommendation" Member="RespForImpDiscussionRecommendations" ThisKey="Member_ID" OtherKey="ResponsibleForImplementation_MemberID" Type="RespForImpDiscussionRecommendation" />
+      <Association Name="Member_MemberPhone" Member="MemberPhones" ThisKey="Member_ID" OtherKey="MemberPhone_MemberID" Type="MemberPhone" />
+      <Association Name="Member_User" Member="Users" ThisKey="Member_ID" OtherKey="User_MemberID" Type="User" />
+      <Association Name="Committee_Member" Member="Committee" ThisKey="Member_CommitteeID" OtherKey="Committee_ID" Type="Committee" IsForeignKey="true" />
+      <Association Name="MembershipStatus_Member" Member="MembershipStatus" ThisKey="Member_MembershipStatusID" OtherKey="MembershipStatus_ID" Type="MembershipStatus" IsForeignKey="true" />
+      <Association Name="MemberType_Member" Member="MemberType" ThisKey="Member_TypeID" OtherKey="MemberType_ID" Type="MemberType" IsForeignKey="true" />
+      <Association Name="Role_Member" Member="Role" ThisKey="Member_RoleID" OtherKey="Role_ID" Type="Role" IsForeignKey="true" />
+      <Association Name="Status_Member" Member="Status" ThisKey="Member_StatusID" OtherKey="Status_ID" Type="Status" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MemberPhones" Member="MemberPhones">
+    <Type Name="MemberPhone">
+      <Column Name="MemberPhone_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MemberPhone_MemberID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MemberPhone_Number" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="MemberPhone_WhatsApp" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="Member_MemberPhone" Member="Member" ThisKey="MemberPhone_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AgendaDiscussions" Member="AgendaDiscussions">
+    <Type Name="AgendaDiscussion">
+      <Column Name="Discussion_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Discussion_AgendaID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discussion_Text" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Discussion_UserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discussion_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="MeetingAgenda_AgendaDiscussion" Member="MeetingAgenda" ThisKey="Discussion_AgendaID" OtherKey="Agenda_ID" Type="MeetingAgenda" IsForeignKey="true" />
+      <Association Name="User_AgendaDiscussion" Member="User" ThisKey="Discussion_UserID" OtherKey="User_ID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Users" Member="Users">
+    <Type Name="User">
+      <Column Name="User_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="User_CommitteeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="User_MemberID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="User_FullName" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="User_Mobile1" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="User_Mobile2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="User_Email" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="User_Password" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="User_StatusID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="User_Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="User_GroupUser" Member="GroupUsers" ThisKey="User_ID" OtherKey="GroupUser_UserID" Type="GroupUser" />
+      <Association Name="User_AgendaDiscussion" Member="AgendaDiscussions" ThisKey="User_ID" OtherKey="Discussion_UserID" Type="AgendaDiscussion" />
+      <Association Name="Committee_User" Member="Committee" ThisKey="User_CommitteeID" OtherKey="Committee_ID" Type="Committee" IsForeignKey="true" />
+      <Association Name="Member_User" Member="Member" ThisKey="User_MemberID" OtherKey="Member_ID" Type="Member" IsForeignKey="true" />
+      <Association Name="Status_User" Member="Status" ThisKey="User_StatusID" OtherKey="Status_ID" Type="Status" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.SP_SelectUserPermission" Method="SP_SelectUserPermission">
+    <Parameter Name="UserID" Parameter="userID" Type="System.Int32" DbType="Int" />
+    <ElementType Name="SP_SelectUserPermissionResult">
+      <Column Name="ModuleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ModuleName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="PageName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="PageURL" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Show" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+      <Column Name="[Add]" Member="Add" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+      <Column Name="Edit" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+      <Column Name="[Index]" Member="Index" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+</Database>

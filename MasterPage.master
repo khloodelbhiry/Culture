@@ -1,0 +1,215 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html dir="rtl">
+<head runat="server">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
+    <link href="App_Themes/css/lite-purple.min.css" rel="stylesheet" />
+    <link href="App_Themes/css/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="App_Themes/js/jquery-3.3.1.min.js"></script>
+    <script src="App_Themes/js/bootstrap.bundle.min.js"></script>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+
+
+<body class="text-left">
+    <div class="app-admin-wrap layout-sidebar-large">
+        <div class="main-header">
+            <div class="logo">
+                <img src="App_Themes/images/logo.png" alt="">
+            </div>
+            <div class="menu-toggle">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="header-part-left">
+                <h1>الإدارة الإلكترونية للجان المجلس</h1>
+            </div>
+            <div style="margin: auto"></div>
+            <div class="header-part-right">
+                <!-- User avatar dropdown -->
+                <div class="dropdown">
+                    <div class="user col align-self-end">
+                        <img src="App_Themes/images/member.png" id="userDropdown" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                            <div class="dropdown-header">
+                                <i class="i-Lock-User mr-1"></i>
+                                <asp:Literal ID="ltUsername" runat="server"></asp:Literal>
+                            </div>
+                            <a class="dropdown-item" runat="server" id="lnkChangePassword" onserverclick="lnkChangePassword_ServerClick">تغير كلمة السر</a>
+                            <a class="dropdown-item" runat="server" id="lnkLogout" onserverclick="lnkLogout_ServerClick">تسجيل خروج</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="side-content-wrap">
+            <div class="sidebar-left open rtl-ps-none" data-perfect-scrollbar="" data-suppress-scroll-x="true">
+                <ul class="navigation-left">
+                    <% if (UserPermissions.Any(p => p.ModuleID.Equals((int)ModulesEnum.Committees)))
+                        {%>
+                    <li <% if (Request.Url.AbsoluteUri.ToLower().Contains("committee.aspx") || Request.Url.AbsoluteUri.ToLower().Contains("members.aspx"))
+                        { %>
+                        class="nav-item active" <% }
+                        else
+                        { %>class="nav-item"
+                        <% }%> data-item="committee"><a class="nav-item-hold" href="committee.aspx"><i class="nav-icon i-File-Clipboard-File--Text"></i><span class="nav-text">تشكيل اللجان</span></a>
+                        <div class="triangle"></div>
+                    </li>
+                    <% }%>
+                    <% if (UserPermissions.Any(p => p.ModuleID.Equals((int)ModulesEnum.CommitteeWorks)))
+                        {%>
+                    <li <% if (Request.Url.AbsoluteUri.ToLower().Contains("meeting-details.aspx") || Request.Url.AbsoluteUri.ToLower().Contains("meetings.aspx") || Request.Url.AbsoluteUri.ToLower().Contains("members.aspx"))
+                        { %>
+                        class="nav-item active" <% }
+                        else
+                        { %>class="nav-item"
+                        <% }%> data-item="meeting"><a class="nav-item-hold" href="committee.aspx"><i class="nav-icon i-Suitcase"></i><span class="nav-text">أعمال اللجنة</span></a>
+                        <div class="triangle"></div>
+                    </li>
+                    <% }%>
+                    <% if (UserPermissions.Any(p => p.ModuleID.Equals((int)ModulesEnum.Financial)))
+                        {%>
+                    <li <% if (Request.Url.AbsoluteUri.ToLower().Contains("rewards.aspx"))
+                        { %>
+                        class="nav-item active" <% }
+                        else
+                        { %>class="nav-item"
+                        <% }%> data-item="financial"><a class="nav-item-hold" href="committee.aspx"><i class="nav-icon i-Double-Tap"></i><span class="nav-text">المالية</span></a>
+                        <div class="triangle"></div>
+                    </li>
+                    <% }%>
+                    <% if (UserPermissions.Any(p => p.ModuleID.Equals((int)ModulesEnum.Security)))
+                        {%>
+                    <li <% if (Request.Url.AbsoluteUri.ToLower().Contains("users.aspx") || Request.Url.AbsoluteUri.ToLower().Contains("groups.aspx"))
+                        { %>
+                        class="nav-item active" <% }
+                        else
+                        { %>class="nav-item"
+                        <% }%> data-item="security"><a class="nav-item-hold" href="#"><i class="nav-icon i-Administrator"></i><span class="nav-text">أمن النظام</span></a>
+                        <div class="triangle"></div>
+                    </li>
+                    <% }%>
+                </ul>
+            </div>
+            <div class="sidebar-left-secondary rtl-ps-none" data-perfect-scrollbar="" data-suppress-scroll-x="true">
+                <ul class="childNav" data-parent="committee">
+                    <li class="nav-item"><a href="committee.aspx"><i class="fa fa-table"></i>&nbsp;&nbsp;<span class="item-name"> اللجان</span></a></li>
+                    <li class="nav-item"><a href="dashboard.aspx"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;<span class="item-name"> لوحة متابعة اللجان </span></a></li>
+                    <li class="nav-item"><a href="members.aspx"><i class="fa fa-users"></i>&nbsp;&nbsp;<span class="item-name"> شؤون الأعضاء</span></a></li>
+                </ul>
+                <ul class="childNav" data-parent="meeting">
+                    <li class="nav-item"><a href="#"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;<span class="item-name"> لوحة متابعة اللجنة </span></a></li>
+                    <li class="nav-item"><a href='<%="members.aspx?id="+ClientDetails.DeSerializeClientDetails(Session["User"].ToString()).CommitteeID %>'><i class="fa fa-users"></i>&nbsp;&nbsp;<span class="item-name"> شؤون الأعضاء</span></a></li>
+                    <li class="nav-item"><a href='<%="meetings.aspx?id="+ClientDetails.DeSerializeClientDetails(Session["User"].ToString()).CommitteeID %>'><i class="fa fa-calendar"></i>&nbsp;&nbsp;<span class="item-name"> الأجتماعات</span></a></li>
+                </ul>
+                <ul class="childNav" data-parent="financial">
+                    <li class="nav-item"><a href="rewards.aspx"><i class="fa fa-money"></i>&nbsp;&nbsp;<span class="item-name"> مستحقات الأعضاء </span></a></li>
+                </ul>
+                <ul class="childNav" data-parent="security">
+                    <li class="nav-item"><a href="users.aspx"><i class="fa fa-users"></i>&nbsp;&nbsp;<span class="item-name">المستخدمون</span></a></li>
+                    <li class="nav-item"><a href="groups.aspx"><i class="fa fa-lock"></i>&nbsp;&nbsp;<span class="item-name">المجموعات</span></a></li>
+                </ul>
+            </div>
+            <div class="sidebar-overlay"></div>
+        </div>
+        <!-- =============== Left side End ================-->
+        <div class="main-content-wrap sidenav-open d-flex flex-column">
+            <!-- ============ Body content start ============= -->
+            <div class="main-content">
+                <div class="breadcrumb" id="breadcrumbs">
+                    <h1 class="mr-2">OneTrack</h1>
+                    <ul id="ulBreadcrumb" runat="server">
+                    </ul>
+                </div>
+                <div class="separator-breadcrumb border-top"></div>
+                <form id="form1" runat="server">
+                    <asp:ScriptManager ID="ScriptManager" runat="server"></asp:ScriptManager>
+                    
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle-2" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">تغير كلمة السر</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-lg-4">كلمة السر القديمة</label>
+
+                                    <div class="col-lg-8">
+                                        <asp:TextBox ID="txtOldPassword" TextMode="Password" runat="server" CssClass="form-control border-input"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvOldPassword" runat="server" Display="Dynamic" ControlToValidate="txtOldPassword" ValidationGroup="vgChangePassword" ForeColor="Red">*</asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-lg-4">كلمة السر الجديدة</label>
+
+                                    <div class="col-lg-8">
+                                        <asp:TextBox ID="txtNewPassword" TextMode="Password" runat="server" CssClass="form-control border-input"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvNewPassword" runat="server" Display="Dynamic" ControlToValidate="txtNewPassword" ValidationGroup="vgChangePassword" ForeColor="Red">*</asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-lg-4">تأكيد كلمة السر</label>
+                                    <div class="col-lg-8">
+                                        <asp:TextBox ID="txtConfirmPassword" TextMode="Password" runat="server" CssClass="form-control border-input"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvConfirmPassword" runat="server" Display="Dynamic" ControlToValidate="txtConfirmPassword" ValidationGroup="vgChangePassword" ForeColor="Red">*</asp:RequiredFieldValidator>
+                                        <asp:CompareValidator ID="cvChangePassword" runat="server" ControlToValidate="txtConfirmPassword" ControlToCompare="txtNewPassword" ErrorMessage="كلمة السر غير متطابقه" ToolTip="كلمة السر غير متطابقه" ValidationGroup="vgChangePassword" ForeColor="Red" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button ID="btnSave" runat="server" CssClass="btn btn-primary ml-2" Text="حفــــــظ" OnClick="btnSave_Click" ValidationGroup="vgChangePassword" meta:resourcekey="btnSaveResource1" />
+                        <button class="btn btn-secondary ml-2" type="button" data-dismiss="modal" aria-label="Close" onclick="$('.modal-backdrop').remove();"><span aria-hidden="true">اغلاق</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    <div>
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </div>
+                </form>
+                <!-- end of main-content -->
+            </div>
+            <!-- Footer Start -->
+            <div class="flex-grow-1"></div>
+            <div class="app-footer">
+                <div class="footer-bottom pt-3 d-flex flex-column flex-sm-row align-items-center">
+                    <span class="flex-grow-1"></span>
+                    <div class="d-flex align-items-center">
+                        <img class="logo" src="App_Themes/images/logo.png" alt="">
+                        <div>
+                            <p class="m-0">&copy; 2020 OneTrack</p>
+                            <p class="m-0">All rights reserved</p>
+                            <p class="m-0">Developed by FD</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- fotter end -->
+        </div>
+    </div>
+    <!-- ============ Search UI Start ============= -->
+    <!-- ============ Search UI End ============= -->
+    <script src="App_Themes/js/perfect-scrollbar.min.js"></script>
+    <script src="App_Themes/js/script.min.js"></script>
+    <script src="App_Themes/js/sidebar.large.script.min.js"></script>
+</body>
+</html>
